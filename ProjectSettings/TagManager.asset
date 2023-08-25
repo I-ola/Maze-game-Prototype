@@ -6,6 +6,7 @@ TagManager:
   tags:
   - wall
   - AI
+  - Trigger
   layers:
   - Default
   - TransparentFX
