@@ -5,9 +5,9 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
     float speed = 10.0f;
-    //public bool notTouching = true;
     CharacterController body;
-  
+    private bool activateMap = false;
+    public GameObject miniMap;
    
     // Start is called before the first frame update
     void Start()
@@ -19,19 +19,8 @@ public class Movement : MonoBehaviour
     void Update()
     {
         PlayerMovement();
-     
-       
+        ActivateMap();
     }
-
-    /*private void OnCollisionEnter(Collision collision)
-    {
-        if(collision.collider.gameObject.tag == "wall")
-        {
-            notTouching = false;
-        }
-
-        notTouching = true;
-    }*/
 
     private void PlayerMovement()
     {
@@ -39,22 +28,22 @@ public class Movement : MonoBehaviour
         float verticalInput = Input.GetAxis("Vertical");
 
         Vector3 move = transform.right * horizontalInput + transform.forward * verticalInput;
-        body.Move(speed * Time.deltaTime * move);
-
-      /*  while (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
-        {
-            speed = 30f;
-        }
-        if (notTouching)
-       {
-            transform.Translate(new Vector3(0, 0, verticalInput) * speed * Time.deltaTime);
-            transform.Translate(new Vector3(horizontalInput, 0, 0) * speed * Time.deltaTime);
-       }*/
-
-        
+        body.Move(speed * Time.deltaTime * move); 
     }
-   
- }
+
+    private void ActivateMap()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            activateMap = true;        
+        }
+
+         if(activateMap == true)
+        {
+            miniMap.SetActive(true);
+        }   
+    }
+}
     
 
 

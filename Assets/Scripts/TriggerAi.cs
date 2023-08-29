@@ -19,13 +19,9 @@ public class TriggerAi : MonoBehaviour
     {
        
     }
-    private void OnCollisionEnter(Collision collision)
-    {
-        startChase = true;
-    }
 
-   /* private void OnTriggerEnter(Collider other)
+   private void OnTriggerEnter(Collider other)
     {
-        startChase = true;
-    }*/
+      startChase = true;   
+    }
 }
