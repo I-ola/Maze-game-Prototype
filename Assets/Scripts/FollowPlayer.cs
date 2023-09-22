@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Schema;
@@ -11,22 +12,79 @@ public class FollowPlayer : MonoBehaviour
     private float rotSpeed = 5.0f;
     public bool canChase = false; */
 
-    public NavMeshAgent agent;
-    public GameObject player;
-    public GameObject activateMe;
-    // Start is called before the first frame update
+    public static FollowPlayer Instance { get; private set; }
+
+    [SerializeField] private NavMeshAgent agent;
+    [SerializeField] private GameObject player;
+
+    public event EventHandler CaughtPlayer;
+
+    private float dist;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-      
+
+        TriggerAi.PlayerHasPassed += TriggerAI_PlayerHasPassed;
+
+        GameManager.Instance.OnStateChanged += GameManager_OnStateChanged;
+
+        Hide();
     }
 
-    // Update is called once per frame
+    private void TriggerAI_PlayerHasPassed(object sender, EventArgs e)
+    {
+        
+        Show();
+    }
+
+    private void GameManager_OnStateChanged(object sender, System.EventArgs e)
+    {
+        if (GameManager.Instance.IsGameOver())
+        {
+            Hide();
+        }
+    }
+
+
     void Update()
     {
-       agent.SetDestination(player.transform.position);
-        
+        agent.SetDestination(player.transform.position);
+
+        dist = Vector3.Distance(agent.transform.position, player.transform.position);
+        CaughtPlayer?.Invoke(this, EventArgs.Empty);
+        //Debug.Log(dist);
+
+       
+
     }
+
+ 
+
+    private void Show()
+    {
+        gameObject.SetActive(true);
+    }  
+    
+    private void Hide()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public bool HasPlayerBeenCaught()
+    {
+       // Debug.Log("player is near");
+        return dist < 20;
+        
+
+    }
+
+    
 
    /* public void Awake()
     {

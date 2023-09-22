@@ -1,27 +1,28 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class TriggerAi : MonoBehaviour
 {
-    
-    public bool startChase = false;
-   
-    
-    // Start is called before the first frame update
-    void Start()
+ 
+ 
+
+    public static event EventHandler PlayerHasPassed;
+ 
+
+    private void OnTriggerEnter(Collider other)
     {
         
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        if (other.gameObject.CompareTag("Player"))
+        {
        
+            PlayerHasPassed?.Invoke(this, EventArgs.Empty);
+        }
+         
     }
 
-   private void OnTriggerEnter(Collider other)
-    {
-      startChase = true;   
-    }
+  
+
+
 }

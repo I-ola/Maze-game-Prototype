@@ -5,37 +5,59 @@ using UnityEngine.UI;
 
 public class CountdownTimer : MonoBehaviour
 {
-    public GameObject textDisplay;
-    public int secondsLeft = 30;
-    public bool takingAway = false;
+    [SerializeField] private Image timerImage;
+    private float timerTime;
+
+    public static CountdownTimer Instance { get; private set; }
+
+    private void Awake()
+    {
+        Instance = this; 
+    }
 
     private void Start()
     {
-        textDisplay.GetComponent<Text>().text = "00:" + secondsLeft;
+        GameManager.Instance.OnStateChanged += GameManager_OnStateChanged;
+    
+        
+    }
+
+    private void GameManager_OnStateChanged(object sender, System.EventArgs e)
+    {
+        if (GameManager.Instance.IsGameOver())
+        {
+            timerImage.fillAmount = 0;   
+        }
+        else if (GameManager.Instance.IsGameCompleted())
+        {
+           
+            timerTime = timerImage.fillAmount;
+            timerImage.fillAmount = 0;
+           
+           
+        }
+       
     }
 
     private void Update()
     {
-        if(takingAway == false &&  secondsLeft > 0)
-        {
-            StartCoroutine(TimerTake());
-        }
-    }
-    IEnumerator TimerTake()
-    {
-        takingAway = true;
-        yield return new WaitForSeconds(1);
-        secondsLeft -= 1;
-        if(secondsLeft < 10)
-        {
-            textDisplay.GetComponent<Text>().text = "00:0" + secondsLeft;
-        }
-        else
-        {
-            textDisplay.GetComponent<Text>().text = "00:" + secondsLeft;
-        }
+        timerImage.fillAmount = GameManager.Instance.GetPlayingTime();
+        timerTime = timerImage.fillAmount;
         
-        takingAway = false;
+
     }
+
+    public float GetTimeTaken()
+    {
+      
+        return timerTime ;
+       
+    }
+ 
+    
+    
+    
+
+    
     
 }
